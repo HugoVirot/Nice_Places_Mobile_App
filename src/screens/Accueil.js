@@ -1,68 +1,75 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import { ImageBackground, StyleSheet, Image, Text, View, Dimensions, TextInput, Button } from 'react-native';
-const { width } = Dimensions.get('window');
-import { useLogInUserQuery } from '../api/apiUserSlice'
+import { storeUserData, setUserAsLoggedIn } from '../stores/userSlice'
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import axios from 'axios';
+library.add(faCheckCircle);
+const { width } = Dimensions.get('window');
 
 export default function Accueil() {
 
-  // const pseudo = useSelector((state) => state.user.pseudo) // getter pour accéder au state
-  const dispatch = useDispatch()
+  const dispatch = useDispatch()                        // pb : token = empty string (state de départ)
+
   const [emailSaisi, setEmailSaisi] = useState('');
   const [mdpsaisi, setMdpSaisi] = useState('');
+
   const [emailError, setEmailError] = useState('');
   const [mdpError, setMdpError] = useState('');
+  const [loginError, setLoginError] = useState('');
+  const [loginSuccess, setLoginSuccess] = useState('');
 
-  // const {
-  //   success
-  // } = useLogInUserQuery()
+  const userLoggedIn = useSelector((state) => state.user.userLoggedIn) // getter pour accéder au state
 
-  const handleLogin = () => {
-    if (emailSaisi.trim()) {
-      console.log({ emailSaisi });
-    } else {
+  const loginAttempt = () => {
+    // on vérifie si un email et un mot de passe ont bien été saisis
+    if (!emailSaisi.trim()) {
       setEmailError('E-mail requis')
     }
-    if (mdpsaisi.trim()) {
-      console.log({ mdpsaisi });
-    } else {
+
+    if (!mdpsaisi.trim()) {
       setMdpError('mot de passe requis')
     }
 
+    // si c'est bon, on efface les éventuels anciens messages d'erreur
     if (emailSaisi.trim() && mdpsaisi.trim()) {
       setEmailError(null)
       setMdpError(null)
 
-      // on initialise la protection CSRF Sanctum via cette route
-      axios.get('https://nice-places.fr/sanctum/csrf-cookie')
+      //puis on tente la connexion
+      axios.post('https://nice-places.fr/api/login', { email: emailSaisi.trim(), password: mdpsaisi.trim() })
+        .then(response => {
+          console.log(response);
 
-        .then(() => {
-          // on tente la connexion
-          axios.post('https://nice-places.fr/api/login', { email: emailSaisi, password: mdpsaisi })
-            .then(response => {
-              console.log(response);
-              // si elle réussit : stockage des données utilisateur reçues dans le localstorage via le userStore
-              // this.storeUserData(response.data.data)
-              // // récupération des notifications de l'utilisateur qu'on stocke également dans le userStore
-              // this.getNotifications()
-              // // redirection vers un composant affichant le message de succès "vous êtes connecté"             
-              // this.$router.push('/successmessage/home/' + response.data.message)
-              // // si elle échoue : on affiche la ou les erreurs rencontrée(s)
-            }).catch((error) => {
-              alert("error")
-            })
+          // si elle réussit : stockage des données utilisateur reçues dans le userStore
+          dispatch(storeUserData(response.data.data))
 
-          // si la requête d'initialisation de la protection CSRF a échoué, on affiche ce message
+          // récupération des notifications de l'utilisateur qu'on stocke également dans le userStore
+
+          // message de succès "vous êtes connecté"     
+          setLoginSuccess('Vous êtes connecté(e)')
+
+          setTimeout(() => {
+            // on enlève le message
+            setLoginSuccess(null)
+            // on marque l'utilisateur comme connecté
+            // dispatch(setUserAsLoggedIn())
+          }, 2500)
+
+          // si elle échoue : on affiche la ou les erreurs rencontrée(s)
         }).catch(() => {
-          alert("Problème d'authentification'. Merci de recharger la page. Réessayez plus tard ou contactez l'administrateur si le problème persiste.")
+          setLoginError('l\'e-mail n\'existe pas ou le mot de passe est incorrect')
         })
-
     }
-  };
+  }
+
   return (
     <View style={stylesheet.container}>
       <ImageBackground source={require('../../assets/ponton-lac.jpg')} resizeMode="cover" style={stylesheet.image}>
+
+        {/* **************************logo et slogan******************* */}
         <Image
           style={stylesheet.logo}
           source={require('../../assets/logo_nice_places.png')}
@@ -70,39 +77,54 @@ export default function Accueil() {
         <Text style={stylesheet.greenText}>sorties nature</Text>
         <Text style={stylesheet.blueText}>près de chez vous</Text>
 
-        <Text style={stylesheet.title}>Connexion</Text>
+        {/* **************************partie connexion******************* */}
 
-        {/* <Text>{success}</Text> */}
+        {loginSuccess ? <Text style={stylesheet.loginSuccessDisplay}>
+              <FontAwesomeIcon icon={faCheckCircle} size={100} style={stylesheet.loginSuccessIcon} />
+              <Text style={stylesheet.loginSuccessText}>{loginSuccess}</Text>
+            </Text> : <Text></Text>}
 
-        {emailError ? <Text style={stylesheet.errorDisplay}>{emailError}</Text> : <Text></Text>}
-        <TextInput
-          style={stylesheet.input}
-          placeholder='email'
-          placeholderTextColor={'grey'}
-          //placeholderTextSize = 20px
-          onChangeText={(text) => setEmailSaisi(text)}
-          value={emailSaisi}
-        />
+        {/* **************************si user pas connecté ******************* */}
+        {!userLoggedIn || loginSuccess ?
 
-        {mdpError ? <Text style={stylesheet.errorDisplay}>{mdpError}</Text> : <Text></Text>}
-        <TextInput
-          style={stylesheet.input}
-          placeholder='mot de passe'
-          placeholderTextColor={'grey'}
-          onChangeText={(text) => setMdpSaisi(text)}
-          value={mdpsaisi}
-        />
+          <View>
+            {loginError ? <Text style={stylesheet.loginErrorDisplay} > {loginError}</Text> : <Text></Text>}
 
-        <Button
-          style={stylesheet.btn}
-          title="en route !"
-          fontFamily='Cooper'
-          buttonStyle={{ fontFamily: 'Cooper' }}
-          onPress={handleLogin}
-          color="#94D1BE"
-        />
+            <Text style={stylesheet.title}>Connexion</Text>
+
+            {emailError ? <Text style={stylesheet.errorDisplay}>{emailError}</Text> : <Text></Text>}
+            <TextInput
+              style={stylesheet.input}
+              placeholder='email'
+              placeholderTextColor={'grey'}
+              //placeholderTextSize = 20px
+              onChangeText={(text) => setEmailSaisi(text)}
+              value={emailSaisi}
+            />
+
+            {mdpError ? <Text style={stylesheet.errorDisplay}>{mdpError}</Text> : <Text></Text>}
+            <TextInput
+              style={stylesheet.input}
+              placeholder='mot de passe'
+              placeholderTextColor={'grey'}
+              onChangeText={(text) => setMdpSaisi(text)}
+              value={mdpsaisi}
+            />
+
+            <Button
+              style={stylesheet.btn}
+              title="en route !"
+              fontFamily='Cooper'
+              buttonStyle={{ fontFamily: 'Cooper' }}
+              onPress={loginAttempt}
+              color="#94D1BE"
+            />
+
+            {/* **************************affichage si déjà connecté******************* */}
+          </View>
+          : <View><Text style={ stylesheet.welcomeText }>Bienvenue sur Nice Places !</Text></View>}
       </ImageBackground>
-    </View>
+    </View >
   )
 }
 
@@ -170,6 +192,46 @@ const stylesheet = StyleSheet.create({
     textAlign: 'center',
   },
 
+  loginErrorDisplay: {
+    padding: 15,
+    backgroundColor: '#a83832',
+    color: '#1C6E8C',
+    fontSize: 20,
+    height: 100,
+    width: width,
+    fontWeight: '900',
+    textAlign: 'center',
+    position: 'absolute',
+    top: '25%',
+    left: 0
+  },
+
+  loginSuccessDisplay: {
+    padding: 15,
+    backgroundColor: '#94D1BE',
+    color: 'white',
+    fontSize: 40,
+    height: 300,
+    width: width,
+    fontWeight: '900',
+    textAlign: 'center',
+    position: 'absolute',
+    zIndex: 1,
+    top: '30%',
+    left: 0,
+    fontFamily: 'Cooper'
+  },
+
+  loginSuccessIcon: {
+    color: 'white',
+    textAlign: 'center',
+    marginBottom: 40
+  },
+
+  loginSuccessText: {
+    textAlign: 'center',
+  },
+
   // styles du formulaire
 
   formStyle: {
@@ -207,4 +269,14 @@ const stylesheet = StyleSheet.create({
     color: '#fff',
     fontFamily: 'Cooper'
   },
+
+  welcomeText: {
+    backgroundColor: '#1C6E8C',
+    padding: 30,
+    borderRadius: 20,
+    fontFamily: 'Cooper',
+    fontSize: 30,
+    color: '#fff',
+    textAlign: 'center'
+  }
 });

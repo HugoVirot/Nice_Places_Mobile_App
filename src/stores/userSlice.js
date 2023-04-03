@@ -9,13 +9,15 @@
 // slice = reducer qui peut modifier directement le state (en apparence)
 // la librairie Immer permet de créer une copie modifiée (pas de modif directe)
 import { createSlice } from '@reduxjs/toolkit'
+import axios from 'axios'
 
 const initialState = {
     pseudo: "",
     email: "",
     id: "",
     departement: "",
-    token: "",
+    region: "",
+    token: "test",
     role: "",
     userLoggedIn: false,
     geolocationAnswered: false,
@@ -29,42 +31,58 @@ export const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
+        // stocke les info utilisateur renvoyées par l'API dans le state après une connexion réussie
         storeUserData: (state, action) => {
-            state.pseudo = action.payload.pseudo
-            state.email = action.payload.email
-            state.id = action.payload.id
-            // state.departement = action.payload.departement
-            // state.region = action.payload.departement ? action.payload.departement.region.nom : null
-            // state.role = action.payload.role
 
-            // si token présent dans userData (= connexion, pas présent si modif infos)
-            if (action.payload.token) {
-                // on stocke le token dans le store
-                state.token = action.payload.token
-                // pour transmettre le token (créé par l'API) avec chaque requête si connecté
-                axios.defaults.headers.common.Authorization = `Bearer ${action.payload.token}`
-                // on définit le statut de l'utilisateur : il est connecté
-                state.userLoggedIn = true
+            const { id, pseudo, email, departement, role, token } = action.payload
+
+            const userLoggedIn = true
+            const region = departement ? departement.region.nom : null
+
+          // ajouter le header Authorization qui contient le token
+            axios.defaults.headers.common.Authorization = `Bearer ${token}`
+
+            // retourner une copie du state contenant les infos utilisateur 
+            return {
+                ...state,
+                pseudo,
+                email,
+                id,
+                departement,
+                region,
+                token,
+                role,
+                userLoggedIn
             }
+
         },
+
+        setUserAsLoggedIn: (state) => {
+            const userLoggedIn = true
+
+            return {
+                ...state,
+                userLoggedIn
+            }
+        }
         // *********************exemples*************************
-        increment: (state) => {
-            // Redux Toolkit allows us to write "mutating" logic in reducers. It
-            // doesn't actually mutate the state because it uses the Immer library,
-            // which detects changes to a "draft state" and produces a brand new
-            // immutable state based off those changes
-            state.value += 1
-        },
-        decrement: (state) => {
-            state.value -= 1
-        },
-        incrementByAmount: (state, action) => {
-            state.value += action.payload
-        },
+        // increment: (state) => {
+        //     // Redux Toolkit allows us to write "mutating" logic in reducers. It
+        //     // doesn't actually mutate the state because it uses the Immer library,
+        //     // which detects changes to a "draft state" and produces a brand new
+        //     // immutable state based off those changes
+        //     state.value += 1
+        // },
+        // decrement: (state) => {
+        //     state.value -= 1
+        // },
+        // incrementByAmount: (state, action) => {
+        //     state.value += action.payload
+        // },
     },
 })
 
 // Action creators are generated for each case reducer function
-export const { increment, decrement, incrementByAmount } = counterSlice.actions
+export const { storeUserData } = userSlice.actions
 
-export default counterSlice.reducer
+export default userSlice.reducer

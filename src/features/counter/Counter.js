@@ -18,7 +18,7 @@ export default function Counter() {
     </TouchableOpacity>
 
     <TouchableOpacity
-      onPress={() => dispatch(decrement())}
+      onPress={() => }
       style={{ ...styles.btn, backgroundColor: '#6e3b3b' }}>
       <Text style={styles.btn_text}> Decrement </Text>
     </TouchableOpacity>

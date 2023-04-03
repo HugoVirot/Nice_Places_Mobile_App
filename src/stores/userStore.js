@@ -1,14 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'  // pour déclarer un store avec redux-toolkit
-import { setupListeners } from '@reduxjs/toolkit/query'
-import { apiUserSlice } from '../api/apiSlice'
+import userReducer from './userSlice'
 
-
-export const userStore = configureStore({
-  reducer: {
-    [apiUserSlice.reducerPath]: apiUserSlice.reducer,
+export const userStore = configureStore(
+  {
+    reducer: {
+      user :userReducer
+    },
   },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(apiUserSlice.middleware),
-})
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),  // pour activer les redux devtools
+  )
 
-setupListeners(userStore.dispatch)
