@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import { ImageBackground, StyleSheet, Image, Text, View, Dimensions, TextInput, Button } from 'react-native';
-import { storeUserData, setUserAsLoggedIn } from '../stores/userSlice'
+import { storeUserData } from '../stores/userSlice'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { library } from "@fortawesome/fontawesome-svg-core";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import axios from 'axios';
-library.add(faCheckCircle);
+import { TouchableOpacity } from 'react-native-web';
+import { Link } from '@react-navigation/native';
+
 const { width } = Dimensions.get('window');
 
 export default function Accueil() {
@@ -51,12 +52,8 @@ export default function Accueil() {
           // message de succès "vous êtes connecté"     
           setLoginSuccess('Vous êtes connecté(e)')
 
-          setTimeout(() => {
-            // on enlève le message
-            setLoginSuccess(null)
-            // on marque l'utilisateur comme connecté
-            // dispatch(setUserAsLoggedIn())
-          }, 2500)
+            // on enlève le message de succès
+          setTimeout(() => setLoginSuccess(null), 2500)
 
           // si elle échoue : on affiche la ou les erreurs rencontrée(s)
         }).catch(() => {
@@ -80,9 +77,9 @@ export default function Accueil() {
         {/* **************************partie connexion******************* */}
 
         {loginSuccess ? <Text style={stylesheet.loginSuccessDisplay}>
-              <FontAwesomeIcon icon={faCheckCircle} size={100} style={stylesheet.loginSuccessIcon} />
-              <Text style={stylesheet.loginSuccessText}>{loginSuccess}</Text>
-            </Text> : <Text></Text>}
+          <FontAwesomeIcon icon={faCheckCircle} size={100} style={stylesheet.loginSuccessIcon} />
+          <Text style={stylesheet.loginSuccessText}>{loginSuccess}</Text>
+        </Text> : <Text></Text>}
 
         {/* **************************si user pas connecté ******************* */}
         {!userLoggedIn || loginSuccess ?
@@ -107,22 +104,24 @@ export default function Accueil() {
               style={stylesheet.input}
               placeholder='mot de passe'
               placeholderTextColor={'grey'}
+              secureTextEntry={true}
               onChangeText={(text) => setMdpSaisi(text)}
               value={mdpsaisi}
             />
 
-            <Button
-              style={stylesheet.btn}
-              title="en route !"
-              fontFamily='Cooper'
-              buttonStyle={{ fontFamily: 'Cooper' }}
-              onPress={loginAttempt}
-              color="#94D1BE"
-            />
+            <TouchableOpacity
+              style={stylesheet.loginButton}
+              onPress={loginAttempt}>
+              <Text style={stylesheet.loginText}>en route !</Text>
+            </TouchableOpacity>
+
+            <Link to={{ screen: 'Inscription' }} style={stylesheet.joinUsButton}>
+              <Text style={stylesheet.joinUsText}>pas encore inscrit ?</Text>
+            </Link>
 
             {/* **************************affichage si déjà connecté******************* */}
           </View>
-          : <View><Text style={ stylesheet.welcomeText }>Bienvenue sur Nice Places !</Text></View>}
+          : <View><Text style={stylesheet.welcomeText}>Bienvenue sur Nice Places !</Text></View>}
       </ImageBackground>
     </View >
   )
@@ -174,12 +173,15 @@ const stylesheet = StyleSheet.create({
   },
 
   title: {  // "connexion"
-    fontSize: 35,
-    color: '#1C6E8C',
+    fontSize: 40,
+    color: '#fff',
     textAlign: 'center',
     fontWeight: '900',
     marginBottom: 20,
-    fontFamily: 'Cooper'
+    fontFamily: 'Cooper',
+    textShadowColor: '#585858',
+    textShadowOffset: { width: 5, height: 5 },
+    textShadowRadius: 10,
   },
 
   errorDisplay: {
@@ -195,7 +197,7 @@ const stylesheet = StyleSheet.create({
   loginErrorDisplay: {
     padding: 15,
     backgroundColor: '#a83832',
-    color: '#1C6E8C',
+    color: 'white',
     fontSize: 20,
     height: 100,
     width: width,
@@ -254,16 +256,10 @@ const stylesheet = StyleSheet.create({
     marginBottom: 20,
     fontFamily: 'Cooper',
     fontSize: 18,
-    paddingLeft: 20
+    paddingLeft: 20,
+    borderRadius: 10,
   },
 
-  btn: {
-    backgroundColor: '#086972',
-    padding: 10,
-    margin: 10,
-    borderRadius: 20,
-    fontFamily: 'Cooper'
-  },
   btn_text: {
     fontSize: 23,
     color: '#fff',
@@ -278,5 +274,33 @@ const stylesheet = StyleSheet.create({
     fontSize: 30,
     color: '#fff',
     textAlign: 'center'
+  },
+
+  loginButton: {
+    backgroundColor: '#94D1BE',
+    padding: 10,
+    borderRadius: 20,
+    textAlign: 'center'
+  },
+
+  loginText: {
+    fontFamily: 'Cooper',
+    fontSize: 20,
+    color: '#fff',
+  },
+
+  joinUsButton: {
+    backgroundColor: '#1C6E8C',
+    marginTop: 30,
+    padding: 10,
+    borderRadius: 20,
+    textAlign: 'center'
+  },
+
+
+  joinUsText: {
+    fontFamily: 'Cooper',
+    fontSize: 20,
+    color: '#fff',
   }
 });

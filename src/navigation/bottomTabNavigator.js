@@ -1,20 +1,13 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { library } from "@fortawesome/fontawesome-svg-core";
-import { faHome, faMap, faLocationDot, faUser, faStar } from "@fortawesome/free-solid-svg-icons";
-
-library.add(faHome);
-library.add(faMap);
-library.add(faLocationDot);
-library.add(faUser);
-library.add(faStar);
-
 import Accueil from '../screens/Accueil'
 import Carte from '../screens/Carte'
 import Lieux from '../screens/Lieux'
 import Compte from '../screens/Compte'
 import Favoris from '../screens/Favoris'
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import Inscription from '../screens/Inscription';
+import { Text } from 'react-native';
+import { faHome, faMap, faLocationDot, faUser, faStar } from "@fortawesome/free-solid-svg-icons";
 
 const Tab = createBottomTabNavigator();
 
@@ -38,13 +31,14 @@ const MyTabs = () => {
                 // },
                 // tabBarActiveTintColor: 'tomato',
                 // tabBarInactiveTintColor: 'gray',
-                tabBarStyle: { 
-                    paddingVertical: 5, 
-                    borderTopLeftRadius: 15, 
-                    borderTopRightRadius: 15, 
-                    backgroundColor: '#1C6E8C', 
-                    position: 'absolute', 
-                    height: 100 },
+                tabBarStyle: {
+                    paddingVertical: 5,
+                    borderTopLeftRadius: 15,
+                    borderTopRightRadius: 15,
+                    backgroundColor: '#1C6E8C',
+                    position: 'absolute',
+                    height: 100
+                },
             })}
         >
             <Tab.Screen
@@ -52,11 +46,11 @@ const MyTabs = () => {
                 component={Accueil}
                 options={{
                     headerShown: false,
-                    tabBarLabel:  ({focused, color, size}) => (
-                        <Text style={{color: focused ? '#94D1BE' : 'white', fontSize: 18, marginBottom: 10, fontFamily: 'Cooper'}}>Accueil</Text>
-                      ),
+                    tabBarLabel: ({ focused, color, size }) => (
+                        <Text style={{ color: focused ? '#94D1BE' : 'white', fontSize: 18, marginBottom: 10, fontFamily: 'Cooper' }}>Accueil</Text>
+                    ),
                     tabBarIcon: ({ focused, color, size }) => (
-                        <FontAwesomeIcon icon={faHome} size={40} style={{color: focused ? '#94D1BE' : 'white'}}/>
+                        <FontAwesomeIcon icon={faHome} size={40} style={{ color: focused ? '#94D1BE' : 'white' }} />
 
                     ),
                 }}
@@ -66,11 +60,11 @@ const MyTabs = () => {
                 component={Carte}
                 options={{
                     headerShown: false,
-                    tabBarLabel:  ({focused, color, size}) => (
-                        <Text style={{color: focused ? '#94D1BE' : 'white', fontSize: 18, marginBottom: 10, fontFamily: 'Cooper'}}>Carte</Text>
-                      ),
+                    tabBarLabel: ({ focused, color, size }) => (
+                        <Text style={{ color: focused ? '#94D1BE' : 'white', fontSize: 18, marginBottom: 10, fontFamily: 'Cooper' }}>Carte</Text>
+                    ),
                     tabBarIcon: ({ focused, color, size }) => (
-                        <FontAwesomeIcon icon={faMap} size={40} style={{color: focused ? '#94D1BE' : 'white'}} />
+                        <FontAwesomeIcon icon={faMap} size={40} style={{ color: focused ? '#94D1BE' : 'white' }} />
                     ),
                 }}
             />
@@ -79,11 +73,11 @@ const MyTabs = () => {
                 component={Lieux}
                 options={{
                     headerShown: false,
-                    tabBarLabel:  ({focused, color, size}) => (
-                        <Text style={{color: focused ? '#94D1BE' : 'white', fontSize: 18, marginBottom: 10, fontFamily: 'Cooper'}}>Lieux</Text>
-                      ),
-                    tabBarIcon: ({ focused, color, size }) => (
-                        <FontAwesomeIcon icon={faLocationDot} size={40} style={{color: focused ? '#94D1BE' : 'white'}} />
+                    tabBarLabel: ({ focused }) => (
+                        <Text style={{ color: focused ? '#94D1BE' : 'white', fontSize: 18, marginBottom: 10, fontFamily: 'Cooper' }}>Lieux</Text>
+                    ),
+                    tabBarIcon: ({ focused }) => (
+                        <FontAwesomeIcon icon={faLocationDot} size={40} style={{ color: focused ? '#94D1BE' : 'white' }} />
                     ),
                 }}
             />
@@ -92,11 +86,11 @@ const MyTabs = () => {
                 component={Compte}
                 options={{
                     headerShown: false,
-                    tabBarLabel:  ({focused, color, size}) => (
-                        <Text style={{color: focused ? '#94D1BE' : 'white', fontSize: 18, marginBottom: 10, fontFamily: 'Cooper'}}>Compte</Text>
-                      ),
+                    tabBarLabel: ({ focused }) => (
+                        <Text style={{ color: focused ? '#94D1BE' : 'white', fontSize: 18, marginBottom: 10, fontFamily: 'Cooper' }}>Compte</Text>
+                    ),
                     tabBarIcon: ({ focused, color, size }) => (
-                        <FontAwesomeIcon icon={faUser} size={40} style={{color: focused ? '#94D1BE' : 'white'}} />
+                        <FontAwesomeIcon icon={faUser} size={40} style={{ color: focused ? '#94D1BE' : 'white' }} />
                     ),
                 }}
             />
@@ -105,41 +99,25 @@ const MyTabs = () => {
                 component={Favoris}
                 options={{
                     headerShown: false,
-                    tabBarLabel:  ({focused, color, size}) => (
-                        <Text style={{color: focused ? '#94D1BE' : 'white', fontSize: 18, marginBottom: 10, fontFamily: 'Cooper'}}>Favoris</Text>
-                      ),
-                    tabBarIcon: ({ focused, color, size }) => (
-                        <FontAwesomeIcon icon={faStar} size={40} style={{color: focused ? '#94D1BE' : 'white'}} />
+                    tabBarLabel: ({ focused }) => (
+                        <Text style={{ color: focused ? '#94D1BE' : 'white', fontSize: 18, marginBottom: 10, fontFamily: 'Cooper' }}>Favoris</Text>
                     ),
+                    tabBarIcon: ({ focused }) => (
+                        <FontAwesomeIcon icon={faStar} size={40} style={{ color: focused ? '#94D1BE' : 'white' }} />
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="Inscription"
+                component={Inscription}
+                options={{
+                    headerShown: false,
+                    tabBarButton: () => null,
+                    tabBarVisible: false,
                 }}
             />
         </Tab.Navigator>
     );
 }
 
-const styles = StyleSheet.create({
-
-});
-
 export default MyTabs
-
-// <NavigationContainer independent={true}>
-// <Tab.Navigator
-//   initialRouteName={screen.HOME}
-//   activeColor={colors.offWhite}
-//   inactiveColor={colors.primaryDarkColor}
-//   barStyle={{backgroundColor: '#694fad', }}
-//   backBehavior={'history'}>
-//   <Tab.Screen
-//     name={screen.HOME}
-//     component={Home}
-//     options={({navigation}) => ({
-//       tabBarColor: colors.homeScreenColor,
-//       tabBarLabel: tabNames.homeTabName,
-//       tabBarIcon: ({color, focused}) => (
-//   <MaterialIcons name="bar-chart" color={color} size={26} />
-//       ),
-//     })}
-//   />
-// </Tab.Navigator>
-// </NavigationContainer>
