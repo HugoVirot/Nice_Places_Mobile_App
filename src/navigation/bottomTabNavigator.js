@@ -1,17 +1,26 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { useSelector } from 'react-redux'
 import Accueil from '../screens/Accueil'
 import Carte from '../screens/Carte'
 import Lieux from '../screens/Lieux'
 import Compte from '../screens/Compte'
 import Favoris from '../screens/Favoris'
-import Inscription from '../screens/Inscription';
+import Inscription from '../screens/Inscription'
+import ModifCompte from '../screens/ModifCompte'
+import LieuxPostes from '../screens/LieuxPostes'
+import ProposerLieu from '../screens/LieuxPostes'
+import Notifications from '../screens/LieuxPostes'
 import { Text } from 'react-native';
 import { faHome, faMap, faLocationDot, faUser, faStar } from "@fortawesome/free-solid-svg-icons";
+import { Pressable } from 'react-native-web';
+import { Link } from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 
-const MyTabs = () => {
+const LoggedUserTabs = () => {
+    const userLoggedIn = useSelector((state) => state.user.userLoggedIn) // getter pour accéder au state
+
     return (
         <Tab.Navigator
             screenOptions={({ route }) => ({
@@ -86,18 +95,31 @@ const MyTabs = () => {
                 component={Compte}
                 options={{
                     headerShown: false,
-                    tabBarLabel: ({ focused }) => (
-                        <Text style={{ color: focused ? '#94D1BE' : 'white', fontSize: 18, marginBottom: 10, fontFamily: 'Cooper' }}>Compte</Text>
-                    ),
-                    tabBarIcon: ({ focused, color, size }) => (
-                        <FontAwesomeIcon icon={faUser} size={40} style={{ color: focused ? '#94D1BE' : 'white' }} />
-                    ),
-                }}
-            />
-            <Tab.Screen
+                    tabBarLabel: ({ focused }) => <Text style={{ color: focused ? '#94D1BE' : 'white', fontSize: 18, marginBottom: 10, fontFamily: 'Cooper' }}>Compte</Text>
+                    ,
+                    tabBarIcon: ({ focused }) => <FontAwesomeIcon icon={faUser} size={40} style={{ color: focused ? '#94D1BE' : 'white' }} />
+                    ,
+                }} />
+            //
+            {/* //             <Tab.Screen
+            //     name="Compte"
+            //     component={Compte}
+            //     options={{
+            //         // tabBarButton: () => userLoggedIn ? <Link to={{ screen: 'Compte' }}></Link> : null,
+            //         headerShown: false,
+            //         tabBarLabel: ({ focused }) => { 
+            //             userLoggedIn ? <Text style={{ color: focused ? '#94D1BE' : 'white', fontSize: 18, marginBottom: 10, fontFamily: 'Cooper' }}>Compte</Text> : <Text>pas connecté</Text> }
+            //         ,
+            //         tabBarIcon: ({ focused }) => { 
+            //             userLoggedIn ? <FontAwesomeIcon icon={faUser} size={40} style={{ color: focused ? '#94D1BE' : 'white' }} /> : <Text>pas connecté</Text> }
+            //         ,
+            //     }}
+            // />*/}
+            < Tab.Screen
                 name="Favoris"
                 component={Favoris}
                 options={{
+                    tabBarVisible: false,
                     headerShown: false,
                     tabBarLabel: ({ focused }) => (
                         <Text style={{ color: focused ? '#94D1BE' : 'white', fontSize: 18, marginBottom: 10, fontFamily: 'Cooper' }}>Favoris</Text>
@@ -107,6 +129,116 @@ const MyTabs = () => {
                     ),
                 }}
             />
+            {/* inscription */}
+            <Tab.Screen
+                name="Inscription"
+                component={Inscription}
+                options={{
+                    headerShown: false,
+                    tabBarButton: () => null,
+                    tabBarVisible: false,
+                }}
+            />
+            {/* modif infos */}
+            <Tab.Screen
+                name="ModifCompte"
+                component={ModifCompte}
+                options={{
+                    headerShown: false,
+                    tabBarButton: () => null,
+                    tabBarVisible: false,
+                }}
+            />
+            {/* mes lieux postés */}
+            <Tab.Screen
+                name="LieuxPostes"
+                component={LieuxPostes}
+                options={{
+                    headerShown: false,
+                    tabBarButton: () => null,
+                    tabBarVisible: false,
+                }}
+            />
+            {/* proposer un lieu */}
+            <Tab.Screen
+                name="ProposerLieu"
+                component={ProposerLieu}
+                options={{
+                    headerShown: false,
+                    tabBarButton: () => null,
+                    tabBarVisible: false,
+                }}
+            />
+            {/* mes notifications*/}
+            <Tab.Screen
+                name="Notifications"
+                component={Notifications}
+                options={{
+                    headerShown: false,
+                    tabBarButton: () => null,
+                    tabBarVisible: false,
+                }}
+            />
+        </Tab.Navigator>
+    );
+}
+
+const GuestTabs = () => {
+
+    return (
+        <Tab.Navigator
+            screenOptions={() => ({
+                tabBarStyle: {
+                    paddingVertical: 5,
+                    borderTopLeftRadius: 15,
+                    borderTopRightRadius: 15,
+                    backgroundColor: '#1C6E8C',
+                    position: 'absolute',
+                    height: 100
+                },
+            })}
+        >
+            <Tab.Screen
+                name="Accueil"
+                component={Accueil}
+                options={{
+                    headerShown: false,
+                    tabBarLabel: ({ focused, color, size }) => (
+                        <Text style={{ color: focused ? '#94D1BE' : 'white', fontSize: 18, marginBottom: 10, fontFamily: 'Cooper' }}>Accueil</Text>
+                    ),
+                    tabBarIcon: ({ focused, color, size }) => (
+                        <FontAwesomeIcon icon={faHome} size={40} style={{ color: focused ? '#94D1BE' : 'white' }} />
+
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="Carte"
+                component={Carte}
+                options={{
+                    headerShown: false,
+                    tabBarLabel: ({ focused, color, size }) => (
+                        <Text style={{ color: focused ? '#94D1BE' : 'white', fontSize: 18, marginBottom: 10, fontFamily: 'Cooper' }}>Carte</Text>
+                    ),
+                    tabBarIcon: ({ focused, color, size }) => (
+                        <FontAwesomeIcon icon={faMap} size={40} style={{ color: focused ? '#94D1BE' : 'white' }} />
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="Lieux"
+                component={Lieux}
+                options={{
+                    headerShown: false,
+                    tabBarLabel: ({ focused }) => (
+                        <Text style={{ color: focused ? '#94D1BE' : 'white', fontSize: 18, marginBottom: 10, fontFamily: 'Cooper' }}>Lieux</Text>
+                    ),
+                    tabBarIcon: ({ focused }) => (
+                        <FontAwesomeIcon icon={faLocationDot} size={40} style={{ color: focused ? '#94D1BE' : 'white' }} />
+                    ),
+                }}
+            />
+            {/* inscription */}
             <Tab.Screen
                 name="Inscription"
                 component={Inscription}
@@ -120,4 +252,4 @@ const MyTabs = () => {
     );
 }
 
-export default MyTabs
+export { LoggedUserTabs, GuestTabs }

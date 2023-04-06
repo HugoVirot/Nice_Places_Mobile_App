@@ -1,15 +1,16 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 // Provide the Redux Store to React
-import { userStore } from './src/stores/userStore.js'
-import { Provider } from 'react-redux'
+import { store } from './src/stores/store.js'
+import { useSelector, Provider } from 'react-redux'
 import { NavigationContainer } from '@react-navigation/native';
-import MyTabs from './src/navigation/bottomTabNavigator.js'
+import { LoggedUserTabs, GuestTabs } from './src/navigation/bottomTabNavigator.js'
 
 export default function App() {
+
   return (
-    <Provider store={userStore}>
+    <Provider store={store}>
       <NavigationContainer>
-        <MyTabs backgroundColor="red" />
+        { store.getState().user.userLoggedIn ? <LoggedUserTabs /> : <GuestTabs />}
       </NavigationContainer>
     </Provider>
   );

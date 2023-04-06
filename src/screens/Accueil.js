@@ -44,10 +44,10 @@ export default function Accueil() {
         .then(response => {
           console.log(response);
 
-          // si elle réussit : stockage des données utilisateur reçues dans le userStore
+          // si elle réussit : stockage des données utilisateur reçues dans le store
           dispatch(storeUserData(response.data.data))
 
-          // récupération des notifications de l'utilisateur qu'on stocke également dans le userStore
+          // récupération des notifications de l'utilisateur qu'on stocke également dans le store
 
           // message de succès "vous êtes connecté"     
           setLoginSuccess('Vous êtes connecté(e)')
@@ -296,7 +296,6 @@ const stylesheet = StyleSheet.create({
     borderRadius: 20,
     textAlign: 'center'
   },
-
 
   joinUsText: {
     fontFamily: 'Cooper',

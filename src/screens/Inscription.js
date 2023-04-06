@@ -74,7 +74,7 @@ export default function Inscription({ navigation: { navigate } }) {
                     setEmailSaisi(null)
                     setMdpSaisi(null)
                     setMdpConfirmSaisi(null)
-                    
+
                     // on enlève le message de succès et on renvoie sur l'accueil
                     setTimeout(() => {
                         setRegisterSuccess(null)
@@ -202,7 +202,7 @@ const stylesheet = StyleSheet.create({
         padding: 50
     },
 
-    title: {  // "connexion"
+    title: {  // "inscription"
         fontSize: 40,
         color: '#1C6E8C',
         textAlign: 'center',
