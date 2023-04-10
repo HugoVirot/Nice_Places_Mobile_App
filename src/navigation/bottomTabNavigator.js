@@ -1,6 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { useSelector } from 'react-redux'
 import Accueil from '../screens/Accueil'
 import Carte from '../screens/Carte'
 import Lieux from '../screens/Lieux'
@@ -13,33 +12,14 @@ import ProposerLieu from '../screens/LieuxPostes'
 import Notifications from '../screens/LieuxPostes'
 import { Text } from 'react-native';
 import { faHome, faMap, faLocationDot, faUser, faStar } from "@fortawesome/free-solid-svg-icons";
-import { Pressable } from 'react-native-web';
-import { Link } from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 
 const LoggedUserTabs = () => {
-    const userLoggedIn = useSelector((state) => state.user.userLoggedIn) // getter pour accéder au state
 
     return (
         <Tab.Navigator
-            screenOptions={({ route }) => ({
-                // tabBarIcon: ({ focused, color, size }) => {
-                //   let iconName;
-
-                //   if (route.name === 'Accueil') {
-                //     iconName = focused
-                //       ?  'faHome'
-                //       : 'faMap';
-                //   } else if (route.name === 'Settings') {
-                //     iconName = focused ? 'ios-list' : 'ios-list-outline';
-                //   }
-
-                //   // You can return any component that you like here!
-                //   return <FontAwesomeIcon icon={iconName} size={size} color={color} />;
-                // },
-                // tabBarActiveTintColor: 'tomato',
-                // tabBarInactiveTintColor: 'gray',
+            screenOptions={() => ({
                 tabBarStyle: {
                     paddingVertical: 5,
                     borderTopLeftRadius: 15,
@@ -55,10 +35,10 @@ const LoggedUserTabs = () => {
                 component={Accueil}
                 options={{
                     headerShown: false,
-                    tabBarLabel: ({ focused, color, size }) => (
+                    tabBarLabel: ({ focused }) => (
                         <Text style={{ color: focused ? '#94D1BE' : 'white', fontSize: 18, marginBottom: 10, fontFamily: 'Cooper' }}>Accueil</Text>
                     ),
-                    tabBarIcon: ({ focused, color, size }) => (
+                    tabBarIcon: ({ focused }) => (
                         <FontAwesomeIcon icon={faHome} size={40} style={{ color: focused ? '#94D1BE' : 'white' }} />
 
                     ),
@@ -69,10 +49,10 @@ const LoggedUserTabs = () => {
                 component={Carte}
                 options={{
                     headerShown: false,
-                    tabBarLabel: ({ focused, color, size }) => (
+                    tabBarLabel: ({ focused }) => (
                         <Text style={{ color: focused ? '#94D1BE' : 'white', fontSize: 18, marginBottom: 10, fontFamily: 'Cooper' }}>Carte</Text>
                     ),
-                    tabBarIcon: ({ focused, color, size }) => (
+                    tabBarIcon: ({ focused }) => (
                         <FontAwesomeIcon icon={faMap} size={40} style={{ color: focused ? '#94D1BE' : 'white' }} />
                     ),
                 }}
@@ -99,22 +79,7 @@ const LoggedUserTabs = () => {
                     ,
                     tabBarIcon: ({ focused }) => <FontAwesomeIcon icon={faUser} size={40} style={{ color: focused ? '#94D1BE' : 'white' }} />
                     ,
-                }} />
-            //
-            {/* //             <Tab.Screen
-            //     name="Compte"
-            //     component={Compte}
-            //     options={{
-            //         // tabBarButton: () => userLoggedIn ? <Link to={{ screen: 'Compte' }}></Link> : null,
-            //         headerShown: false,
-            //         tabBarLabel: ({ focused }) => { 
-            //             userLoggedIn ? <Text style={{ color: focused ? '#94D1BE' : 'white', fontSize: 18, marginBottom: 10, fontFamily: 'Cooper' }}>Compte</Text> : <Text>pas connecté</Text> }
-            //         ,
-            //         tabBarIcon: ({ focused }) => { 
-            //             userLoggedIn ? <FontAwesomeIcon icon={faUser} size={40} style={{ color: focused ? '#94D1BE' : 'white' }} /> : <Text>pas connecté</Text> }
-            //         ,
-            //     }}
-            // />*/}
+                }}/>
             < Tab.Screen
                 name="Favoris"
                 component={Favoris}

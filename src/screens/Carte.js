@@ -1,27 +1,14 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { StyleSheet, Text, View } from 'react-native';
 
-import { decrement, increment } from '../features/counter/counterSlice.js'
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-
-export default function Counter() {
+export default function Carte() {
   const count = useSelector((state) => state.counter.value) // getter pour accéder au state
   const dispatch = useDispatch()
 
   return (
     <View style={styles.container}>
     <Text style={styles.title_text}>Carte</Text>
-    <Text style={styles.counter_text}>{count}</Text>
-
-    <TouchableOpacity onPress={() => dispatch(increment())} style={styles.btn}>
-      <Text style={styles.btn_text}> Increment </Text>
-    </TouchableOpacity>
-
-    <TouchableOpacity
-      onPress={() => dispatch(decrement())}
-      style={{ ...styles.btn, backgroundColor: '#6e3b3b' }}>
-      <Text style={styles.btn_text}> Decrement </Text>
-    </TouchableOpacity>
  </View>
   )
 }

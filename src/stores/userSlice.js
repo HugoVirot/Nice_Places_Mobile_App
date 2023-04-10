@@ -56,10 +56,13 @@ export const userSlice = createSlice({
             }
 
         },
+        logOutUser: (state, action) => {
+            return initialState
+        }
     },
 })
 
 // Action creators are generated for each case reducer function
-export const { storeUserData } = userSlice.actions
+export const { storeUserData, logOutUser } = userSlice.actions
 
 export default userSlice.reducer

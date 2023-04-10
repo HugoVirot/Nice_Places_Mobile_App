@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, ImageBackground, StyleSheet, Alert, Pressable, Text, View, Dimensions, TextInput, Button } from 'react-native';
+import { Modal, ImageBackground, StyleSheet, Alert, Pressable, Text, View, Dimensions, TextInput } from 'react-native';
 const { width } = Dimensions.get('window');
 import { TouchableOpacity } from 'react-native';
 import axios from 'axios';
@@ -32,19 +32,19 @@ export default function Inscription({ navigation: { navigate } }) {
         if (!pseudoSaisi.trim()) {
             setPseudoError('Pseudo requis')
         } else {
-            setPseudoError(null)
+            setPseudoError('')
         }
 
         if (!emailSaisi.trim() || !emailSaisi.includes('@') || !emailSaisi.includes('.')) {
             setEmailError('E-mail manquant ou incorrect')
         } else {
-            setEmailError(null)
+            setEmailError('')
         }
 
         if (!mdpSaisi.trim()) {
             setMdpError('mot de passe requis')
         } else {
-            setMdpError(null)
+            setMdpError('')
         }
 
         // si confirmation pas saisie ou différente du mot de passe (s'il est saisi)
@@ -53,7 +53,7 @@ export default function Inscription({ navigation: { navigate } }) {
         }
         // sinon, si tout est rempli est bon, on efface les éventuels anciens messages d'erreur
         else if (pseudoSaisi.trim() && emailSaisi.trim() && mdpSaisi.trim()) {
-            setMdpConfirmError(null)
+            setMdpConfirmError('')
 
             //puis on tente l'inscription avec un appel api qui transmet les infos saisies
             axios.post('https://nice-places.fr/api/register', {
@@ -70,14 +70,14 @@ export default function Inscription({ navigation: { navigate } }) {
                     // message de succès "vous êtes connecté"     
                     setRegisterSuccess('Inscription réussie !')
 
-                    setPseudoSaisi(null)
-                    setEmailSaisi(null)
-                    setMdpSaisi(null)
-                    setMdpConfirmSaisi(null)
+                    setPseudoSaisi('')
+                    setEmailSaisi('')
+                    setMdpSaisi('')
+                    setMdpConfirmSaisi('')
 
                     // on enlève le message de succès et on renvoie sur l'accueil
                     setTimeout(() => {
-                        setRegisterSuccess(null)
+                        setRegisterSuccess('')
                         navigate('Accueil') // https://reactnavigation.org/docs/navigation-prop/
                     }, 2500)
 
@@ -122,8 +122,6 @@ export default function Inscription({ navigation: { navigate } }) {
                         </View>
                     </View>
                 </Modal>
-
-                {/* {registerErrors ? <Text style={stylesheet.registerErrorDisplay} > {registerErrors}</Text> : <Text></Text>} */}
 
                 {registerSuccess ? <Text style={stylesheet.registerSuccessDisplay}>
                     <FontAwesomeIcon icon={faCheckCircle} size={100} style={stylesheet.registerSuccessIcon} />
@@ -298,7 +296,10 @@ const stylesheet = StyleSheet.create({
         zIndex: 1,
         top: '30%',
         left: 0,
-        fontFamily: 'Cooper'
+        fontFamily: 'Cooper',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center'
     },
 
     registerSuccessIcon: {

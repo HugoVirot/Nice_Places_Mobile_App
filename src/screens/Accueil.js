@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import { ImageBackground, StyleSheet, Image, Text, View, Dimensions, TextInput, Button } from 'react-native';
-import { storeUserData } from '../stores/userSlice'
+import { logOutUser, storeUserData } from '../stores/userSlice'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import axios from 'axios';
@@ -20,9 +20,10 @@ export default function Accueil() {
   const [emailError, setEmailError] = useState('');
   const [mdpError, setMdpError] = useState('');
   const [loginError, setLoginError] = useState('');
-  const [loginSuccess, setLoginSuccess] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   const userLoggedIn = useSelector((state) => state.user.userLoggedIn) // getter pour accéder au state
+  const pseudo = useSelector((state) => state.user.pseudo) // getter pour accéder au state
 
   const loginAttempt = () => {
     // on vérifie si un email et un mot de passe ont bien été saisis
@@ -44,22 +45,24 @@ export default function Accueil() {
         .then(response => {
           console.log(response);
 
-          // si elle réussit : stockage des données utilisateur reçues dans le store
-          dispatch(storeUserData(response.data.data))
+          // si elle réussit : message de succès "vous êtes connecté"     
+          setSuccessMessage('Vous êtes connecté(e)')
 
           // récupération des notifications de l'utilisateur qu'on stocke également dans le store
 
-          // message de succès "vous êtes connecté"     
-          setLoginSuccess('Vous êtes connecté(e)')
-
-            // on enlève le message de succès
-          setTimeout(() => setLoginSuccess(null), 2500)
+          // stockage des données utilisateur reçues dans le store
+          setTimeout(() => dispatch(storeUserData(response.data.data)), 2500)
 
           // si elle échoue : on affiche la ou les erreurs rencontrée(s)
         }).catch(() => {
           setLoginError('l\'e-mail n\'existe pas ou le mot de passe est incorrect')
         })
     }
+  }
+
+  const logOut = () => {
+    setSuccessMessage('Déconnexion réussie !')
+    setTimeout(() => dispatch(logOutUser()), 2500)
   }
 
   return (
@@ -74,15 +77,17 @@ export default function Accueil() {
         <Text style={stylesheet.greenText}>sorties nature</Text>
         <Text style={stylesheet.blueText}>près de chez vous</Text>
 
-        {/* **************************partie connexion******************* */}
+        {/* **********************************partie connexion****************************** */}
 
-        {loginSuccess ? <Text style={stylesheet.loginSuccessDisplay}>
-          <FontAwesomeIcon icon={faCheckCircle} size={100} style={stylesheet.loginSuccessIcon} />
-          <Text style={stylesheet.loginSuccessText}>{loginSuccess}</Text>
+        {/* *********** message de succès si connexion réussie ************* */}
+
+        {successMessage ? <Text style={stylesheet.successMessageDisplay}>
+          <FontAwesomeIcon icon={faCheckCircle} size={100} style={stylesheet.successMessageIcon} />
+          <Text style={stylesheet.successMessageText}>{successMessage}</Text>
         </Text> : <Text></Text>}
 
-        {/* **************************si user pas connecté ******************* */}
-        {!userLoggedIn || loginSuccess ?
+        {/****si user pas connecté ou message de succès existant (=> connexion réussie) *****/}
+        {!userLoggedIn || successMessage ?
 
           <View>
             {loginError ? <Text style={stylesheet.loginErrorDisplay} > {loginError}</Text> : <Text></Text>}
@@ -94,7 +99,6 @@ export default function Accueil() {
               style={stylesheet.input}
               placeholder='email'
               placeholderTextColor={'grey'}
-              //placeholderTextSize = 20px
               onChangeText={(text) => setEmailSaisi(text)}
               value={emailSaisi}
             />
@@ -110,18 +114,25 @@ export default function Accueil() {
             />
 
             <TouchableOpacity
-              style={stylesheet.loginButton}
+              style={[stylesheet.loginButton, stylesheet.button]}
               onPress={loginAttempt}>
-              <Text style={stylesheet.loginText}>en route !</Text>
+              <Text style={stylesheet.buttonText}>en route !</Text>
             </TouchableOpacity>
 
-            <Link to={{ screen: 'Inscription' }} style={stylesheet.joinUsButton}>
-              <Text style={stylesheet.joinUsText}>pas encore inscrit ?</Text>
+            <Link to={{ screen: 'Inscription' }} style={[stylesheet.joinUsButton, stylesheet.button]}>
+              <Text style={stylesheet.buttonText}>pas encore inscrit ?</Text>
             </Link>
 
             {/* **************************affichage si déjà connecté******************* */}
           </View>
-          : <View><Text style={stylesheet.welcomeText}>Bienvenue sur Nice Places !</Text></View>}
+          : <View>
+            <Text style={stylesheet.welcomeText}>Bienvenue sur Nice Places, {pseudo} !</Text>
+            <TouchableOpacity style={[stylesheet.logOutButton, stylesheet.button]}
+              onPress={logOut}>
+              <Text style={stylesheet.buttonText}>Se déconnecter</Text>
+            </TouchableOpacity>
+          </View>
+        }
       </ImageBackground>
     </View >
   )
@@ -151,14 +162,14 @@ const stylesheet = StyleSheet.create({
     padding: 50
   },
 
-  greenText: {   // styles du texte "sorties nature"
+  greenText: {   // style du texte "sorties nature"
     color: '#94D1BE',
     fontSize: 25,
     fontFamily: 'Cooper',
     textAlign: 'left'
   },
 
-  blueText: {  // styles du texte "près de chez vous"
+  blueText: {  // style du texte "près de chez vous"
     color: '#1C6E8C',
     fontSize: 25,
     marginBottom: 190,
@@ -199,16 +210,19 @@ const stylesheet = StyleSheet.create({
     backgroundColor: '#a83832',
     color: 'white',
     fontSize: 20,
+    width: 250,
     height: 100,
-    width: width,
     fontWeight: '900',
     textAlign: 'center',
     position: 'absolute',
-    top: '25%',
-    left: 0
+    top: -100,
+    left: 25,
+    width: 250,
+    zIndex: 1,
+    fontFamily: 'Cooper'
   },
 
-  loginSuccessDisplay: {
+  successMessageDisplay: {
     padding: 15,
     backgroundColor: '#94D1BE',
     color: 'white',
@@ -221,16 +235,19 @@ const stylesheet = StyleSheet.create({
     zIndex: 1,
     top: '30%',
     left: 0,
-    fontFamily: 'Cooper'
+    fontFamily: 'Cooper',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
   },
 
-  loginSuccessIcon: {
+  successMessageIcon: {
     color: 'white',
     textAlign: 'center',
     marginBottom: 40
   },
 
-  loginSuccessText: {
+  successMessageText: {
     textAlign: 'center',
   },
 
@@ -260,12 +277,6 @@ const stylesheet = StyleSheet.create({
     borderRadius: 10,
   },
 
-  btn_text: {
-    fontSize: 23,
-    color: '#fff',
-    fontFamily: 'Cooper'
-  },
-
   welcomeText: {
     backgroundColor: '#1C6E8C',
     padding: 30,
@@ -276,28 +287,27 @@ const stylesheet = StyleSheet.create({
     textAlign: 'center'
   },
 
-  loginButton: {
-    backgroundColor: '#94D1BE',
+  button: {
     padding: 10,
     borderRadius: 20,
     textAlign: 'center'
   },
 
-  loginText: {
-    fontFamily: 'Cooper',
-    fontSize: 20,
-    color: '#fff',
+  loginButton: {
+    backgroundColor: '#94D1BE',
+  },
+
+  logOutButton: {
+    backgroundColor: '#94D1BE',
+    marginTop: 30,
   },
 
   joinUsButton: {
     backgroundColor: '#1C6E8C',
     marginTop: 30,
-    padding: 10,
-    borderRadius: 20,
-    textAlign: 'center'
   },
 
-  joinUsText: {
+  buttonText: {
     fontFamily: 'Cooper',
     fontSize: 20,
     color: '#fff',
