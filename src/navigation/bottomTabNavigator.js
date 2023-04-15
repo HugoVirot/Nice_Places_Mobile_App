@@ -12,10 +12,11 @@ import ProposerLieu from '../screens/LieuxPostes'
 import Notifications from '../screens/LieuxPostes'
 import { Text } from 'react-native';
 import { faHome, faMap, faLocationDot, faUser, faStar } from "@fortawesome/free-solid-svg-icons";
+import Lieu from '../screens/Lieu'
 
 const Tab = createBottomTabNavigator();
 
-const LoggedUserTabs = () => {
+const LoggedUserTabs = ({ route }) => {
 
     return (
         <Tab.Navigator
@@ -79,7 +80,7 @@ const LoggedUserTabs = () => {
                     ,
                     tabBarIcon: ({ focused }) => <FontAwesomeIcon icon={faUser} size={40} style={{ color: focused ? '#94D1BE' : 'white' }} />
                     ,
-                }}/>
+                }} />
             < Tab.Screen
                 name="Favoris"
                 component={Favoris}
@@ -112,6 +113,17 @@ const LoggedUserTabs = () => {
                     headerShown: false,
                     tabBarButton: () => null,
                     tabBarVisible: false,
+                }}
+            />
+            {/* détail du lieu */}
+            <Tab.Screen
+                name="Lieu"
+                component={Lieu}
+                options={{
+                    headerShown: false,
+                    tabBarButton: () => null,
+                    tabBarVisible: false,
+                    // id: route.params.id
                 }}
             />
             {/* mes lieux postés */}
@@ -148,7 +160,7 @@ const LoggedUserTabs = () => {
     );
 }
 
-const GuestTabs = () => {
+const GuestTabs = ({ route }) => {
 
     return (
         <Tab.Navigator
@@ -211,6 +223,17 @@ const GuestTabs = () => {
                     headerShown: false,
                     tabBarButton: () => null,
                     tabBarVisible: false,
+                }}
+            />
+            {/* détail du lieu */}
+            <Tab.Screen
+                name="Lieu"
+                component={Lieu}
+                options={{
+                    headerShown: false,
+                    tabBarButton: () => null,
+                    tabBarVisible: false,
+                    // id: route.params.id
                 }}
             />
         </Tab.Navigator>

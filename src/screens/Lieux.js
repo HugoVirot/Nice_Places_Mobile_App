@@ -66,7 +66,7 @@ export default function Lieux() {
                                         {lieu.ville} ({lieu.code_postal.slice(0, 2)})
                                     </Text>
 
-                                    <Link to={{ screen: 'Inscription' }} style={stylesheet.linkToPlaceButton}>
+                                    <Link to={{ screen: 'Lieu', params: { id: lieu.id } }} style={stylesheet.linkToPlaceButton}>
                                         <Text style={stylesheet.linkToPlaceText}>Voir le lieu</Text>
                                     </Link>
 

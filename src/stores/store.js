@@ -11,4 +11,3 @@ export const store = configureStore(
   },
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),  // pour activer les redux devtools
   )
-
