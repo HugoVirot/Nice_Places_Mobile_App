@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
-import { ImageBackground, StyleSheet, Image, Text, View, Dimensions, TextInput, Button } from 'react-native';
+import { ImageBackground, StyleSheet, Image, Text, View, Dimensions, TextInput } from 'react-native';
 import { logOutUser, storeUserData } from '../stores/userSlice'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
