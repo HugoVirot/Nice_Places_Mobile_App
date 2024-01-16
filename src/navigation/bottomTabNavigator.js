@@ -233,7 +233,6 @@ const GuestTabs = ({ route }) => {
                     headerShown: false,
                     tabBarButton: () => null,
                     tabBarVisible: false,
-                    // id: route.params.id
                 }}
             />
         </Tab.Navigator>

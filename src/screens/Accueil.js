@@ -1,42 +1,42 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
-import { ImageBackground, StyleSheet, Image, Text, View, Dimensions, TextInput } from 'react-native';
+import { ImageBackground, StyleSheet, Image, Text, View, Dimensions, TextInput } from 'react-native'
 import { logOutUser, storeUserData } from '../stores/userSlice'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
-import axios from 'axios';
-import { TouchableOpacity } from 'react-native-web';
-import { Link } from '@react-navigation/native';
+import { faCheckCircle } from "@fortawesome/free-solid-svg-icons"
+import axios from 'axios'
+import { TouchableOpacity } from 'react-native-web'
+import { Link } from '@react-navigation/native'
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get('window')
 
 export default function Accueil() {
 
-  const dispatch = useDispatch()                        // pb : token = empty string (state de départ)
+  const dispatch = useDispatch()                       
 
-  const [emailSaisi, setEmailSaisi] = useState('');
-  const [mdpsaisi, setMdpSaisi] = useState('');
+  const [emailSaisi, setEmailSaisi] = useState('')
+  const [mdpsaisi, setMdpSaisi] = useState('')
 
-  const [emailError, setEmailError] = useState('');
-  const [mdpError, setMdpError] = useState('');
-  const [loginError, setLoginError] = useState('');
+  const [emailError, setEmailError] = useState('')
+  const [mdpError, setMdpError] = useState('')
+  const [loginError, setLoginError] = useState('')
   const [successMessage, setSuccessMessage] = useState('');
 
   const userLoggedIn = useSelector((state) => state.user.userLoggedIn) // getter pour accéder au state
   const pseudo = useSelector((state) => state.user.pseudo) // getter pour accéder au state
 
-  const loginAttempt = () => {
+  const handleLogin = () => {
     // on vérifie si un email et un mot de passe ont bien été saisis
-    if (!emailSaisi.trim()) {
+    if (!emailSaisi) {
       setEmailError('E-mail requis')
     }
 
-    if (!mdpsaisi.trim()) {
+    if (!mdpsaisi) {
       setMdpError('mot de passe requis')
     }
 
     // si c'est bon, on efface les éventuels anciens messages d'erreur
-    if (emailSaisi.trim() && mdpsaisi.trim()) {
+    if (emailSaisi && mdpsaisi) {
       setEmailError(null)
       setMdpError(null)
 
@@ -115,7 +115,7 @@ export default function Accueil() {
 
             <TouchableOpacity
               style={[stylesheet.loginButton, stylesheet.button]}
-              onPress={loginAttempt}>
+              onPress={handleLogin}>
               <Text style={stylesheet.buttonText}>en route !</Text>
             </TouchableOpacity>
 

@@ -1,13 +1,14 @@
 {
   "expo": {
-    "name": "Nice_Places_Mobile_App",
-    "slug": "Nice_Places_Mobile_App",
+    "name": "Nice Places",
+    "slug": "nice-places",
+    "description": "Sorties nature près de chez vous",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/favicon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/favicon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -19,12 +20,18 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/favicon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.hugovirot.nice-places"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "56028025-a47d-475c-8d47-34b5aee5a36b"
+      }
     }
   }
 }

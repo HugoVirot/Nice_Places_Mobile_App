@@ -23,53 +23,53 @@ export default function Inscription({ navigation: { navigate } }) {
 
     const [modalVisible, setModalVisible] = useState(false);
 
-    const registerAttempt = () => {
+    const handleRegister = () => {
         // si il y avait des erreurs de validation, on les supprime
         if (registerErrors) {
             setRegisterErrors('')
         }
-        // on vérifie si un email et un mot de passe ont bien été saisis
-        if (!pseudoSaisi.trim()) {
+
+        // on vérifie si un pseudo, un email et un mot de passe ont bien été saisis
+        if (!pseudoSaisi) {
             setPseudoError('Pseudo requis')
         } else {
             setPseudoError('')
         }
 
-        if (!emailSaisi.trim() || !emailSaisi.includes('@') || !emailSaisi.includes('.')) {
+        if (!emailSaisi || !emailSaisi.includes('@') || !emailSaisi.includes('.')) {
             setEmailError('E-mail manquant ou incorrect')
         } else {
             setEmailError('')
         }
 
-        if (!mdpSaisi.trim()) {
+        if (!mdpSaisi) {
             setMdpError('mot de passe requis')
         } else {
             setMdpError('')
         }
 
         // si confirmation pas saisie ou différente du mot de passe (s'il est saisi)
-        if (!mdpConfirmSaisi.trim() || mdpSaisi.trim() && mdpConfirmSaisi.trim() !== mdpSaisi.trim()) {
+        if (!mdpConfirmSaisi || mdpSaisi && mdpConfirmSaisi !== mdpSaisi) {
             setMdpConfirmError('confirmation manquante ou incorrecte')
         }
         // sinon, si tout est rempli est bon, on efface les éventuels anciens messages d'erreur
-        else if (pseudoSaisi.trim() && emailSaisi.trim() && mdpSaisi.trim()) {
+        else if (pseudoSaisi && emailSaisi && mdpSaisi) {
             setMdpConfirmError('')
 
             //puis on tente l'inscription avec un appel api qui transmet les infos saisies
             axios.post('https://nice-places.fr/api/register', {
-                pseudo: pseudoSaisi.trim(),
+                pseudo: pseudoSaisi.trim(),  // trim enlève les espaces en début et fin de saisie
                 email: emailSaisi.trim(),
-                password: mdpSaisi.trim(),
-                password_confirmation: mdpConfirmSaisi.trim()
+                password: mdpSaisi,
+                password_confirmation: mdpConfirmSaisi
             })
                 .then(response => {
                     console.log(response);
 
-                    // on enregistre une notification de confirmation à destination de l'utilisateur
-
-                    // message de succès "vous êtes connecté"     
+                    // on enregistre un message de succès (affiché ensuite)
                     setRegisterSuccess('Inscription réussie !')
 
+                    // on réinitialise tous les champs
                     setPseudoSaisi('')
                     setEmailSaisi('')
                     setMdpSaisi('')
@@ -81,18 +81,15 @@ export default function Inscription({ navigation: { navigate } }) {
                         navigate('Accueil') // https://reactnavigation.org/docs/navigation-prop/
                     }, 2500)
 
-                    // si elle échoue : on affiche la ou les erreurs rencontrée(s)
+                    // si l'inscription échoue : on affiche la ou les erreurs rencontrée(s)
                 }).catch((error) => {
 
                     Object.values(error.response.data.errors).forEach(value => {
                         // on transforme chaque tableau de messages d'erreurs en string et on l'ajoute
                         let oldRegisterErrors = registerErrors
                         setRegisterErrors(oldRegisterErrors += value.toString());
-                        // setTimeout(() => {
-                        //     setRegisterErrors(null)
-                        // }, 5000)
                     })
-
+                    // on affiche les erreurs en console et on rend le modal visible (message de succès)
                     console.log(registerErrors);
                     setModalVisible(true)
                 })
@@ -175,7 +172,7 @@ export default function Inscription({ navigation: { navigate } }) {
 
                     <TouchableOpacity
                         style={stylesheet.loginButton}
-                        onPress={registerAttempt}>
+                        onPress={handleRegister}>
                         <Text style={stylesheet.loginText}>valider</Text>
                     </TouchableOpacity>
                 </View>
